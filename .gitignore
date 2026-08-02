@@ -12,7 +12,7 @@ app.sh
 
 #dir
 data/
-config/
+config/server/
 models/ 
 
 #django

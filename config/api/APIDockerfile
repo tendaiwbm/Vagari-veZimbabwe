@@ -1,0 +1,13 @@
+FROM qgis/qgis:final-3_28_9
+
+RUN apt-get update
+
+RUN mkdir /temporary
+
+COPY packages.txt /temporary/
+
+RUN pip install -r /temporary/packages.txt
+
+RUN rm -rf /temporary
+
+RUN pip install uwsgi

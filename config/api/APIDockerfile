@@ -11,3 +11,5 @@ RUN pip install -r /temporary/packages.txt
 RUN rm -rf /temporary
 
 RUN pip install uwsgi
+
+ENTRYPOINT /bin/bash -c "uwsgi --ini /app/populationzim/populationzim_uwsgi.ini"

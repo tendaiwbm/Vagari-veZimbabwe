@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model
 
 
 class ModelTests(TestCase):
+    """Tests for custom user model"""
 
     def test_create_user_with_email_successful(self):
 
@@ -39,4 +40,68 @@ class ModelTests(TestCase):
 
         self.assertTrue(user.is_superuser)
         self.assertTrue(user.is_staff)
+
+
+from django.test import Client
+from django.urls import reverse
+
+
+class AdminSiteTests(TestCase):
+    """Tests for Django admin"""
+
+    def setUp(self):
+        """Create user and client"""
+
+        admin_data = { "email": "test-admin@ravira.com",
+                       "password": "ravira678" }
+        
+        user_data = { "email": "test@ravira.com",
+                      "password": "raviraindezvenyu",
+                      "name": "Thomas Ramos" }
+        
+        self.client = Client()
+        self.admin = get_user_model().objects.create_superuser(**admin_data)
+
+        self.client.force_login(self.admin)
+        self.user = get_user_model().objects.create_user(**user_data)
+        
+
+    def test_users_list(self):
+        """Test that users are listed on page"""
+
+        url = reverse("admin:geo_user_changelist")
+        response = self.client.get(url)
+
+        self.assertContains(response,self.user.name)
+        self.assertContains(response,self.user.email)
+
+    def test_edit_user_page(self):
+        """Test that the edit user page works"""
+
+        url = reverse("admin:geo_user_change",args=[self.user.id])
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code,200)
+
+    def test_create_user_page(self):
+        """Test that the create user page works"""
+
+        url = reverse("admin:geo_user_add")
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code,200)
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
 

@@ -1,10 +1,10 @@
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, authenticate
 from rest_framework import serializers
-
+from django.conf import settings
 
 class UserSerializer(serializers.ModelSerializer):
     """Serializer for the user object"""
-    
+        
     class Meta:
         model = get_user_model()
         fields = ["email","password","name"]
@@ -13,3 +13,42 @@ class UserSerializer(serializers.ModelSerializer):
     def create(self,validated_data):
         """Create and return user with ecrypted password"""
         return get_user_model().objects.create_user(**validated_data)
+
+    def update(self,instance,validated_data):
+        """Update & return user"""
+
+        password = validated_data.pop("password",None)
+        user = super().update(instance,validated_data)
+
+        if password:
+            user.set_password(password)
+            user.save()
+
+        return user
+
+class AuthTokenSerializer(serializers.Serializer):
+    """Serializer for the user auth token"""
+    
+    class Meta:
+        abstract = 'rest_framework.authtoken' not in settings.INSTALLED_APPS
+
+    email = serializers.EmailField()
+    password = serializers.CharField(style={"input_type":"password"},
+                                     trim_whitespace=False)
+
+    def validate(self,params):
+        """Validate & authenticate the user"""
+
+        user = authenticate(request=self.context.get("request"),
+                            username=params.get("email"),
+                            password=params.get("password"))
+
+        if not user:
+            msg = "Unable to authenticate"
+            raise serializers.ValidationError(msg,code="authorization")
+
+        params["user"] = user
+
+        return params
+
+

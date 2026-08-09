@@ -1,5 +1,7 @@
 from django.test import TestCase
 from django.contrib.auth import get_user_model
+from decimal import Decimal
+from geo import models
 
 
 class ModelTests(TestCase):
@@ -91,7 +93,23 @@ class AdminSiteTests(TestCase):
 
         self.assertEqual(response.status_code,200)
 
-        
+    def test_create_recipe(self):
+        """Test creating a recipe is successful"""
+
+        user_data = { "email": "test-recipe@ravira.com",
+                      "password": "raviraindezvenyu",
+                      "name": "Finn Smith" }
+
+        user = get_user_model().objects.create_user(**user_data)
+
+        recipe = models.Recipe.objects.create(user=user,
+                                              title="Haifiridzi",
+                                              time_minutes=5,
+                                              price=Decimal("1.75"),
+                                              description="Mirairo yekubika haifiridzi")
+
+        self.assertEqual(str(recipe),recipe.title)
+
 
 
 

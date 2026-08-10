@@ -8,7 +8,6 @@
 **/populationzim.sock
 **/populationzim_uwsgi.ini
 **/*.swp
-app.sh
 
 #dir
 data/

@@ -13,7 +13,8 @@ app.sh
 #dir
 data/
 config/server/
-models/ 
+models/
+**/static/ 
 
 #django
 **/settings.py

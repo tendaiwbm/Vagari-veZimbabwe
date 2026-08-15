@@ -1,2 +1,2 @@
 
-<h2>Current Status</h2>
+<h2>Status</h2>

@@ -42,3 +42,17 @@ class District(models.Model):
         db_table = f'"{settings.BASE_SCHEMA}"."district"'
 
     objects = models.Manager()
+
+
+class Province(models.Model):
+    province_name = models.CharField(max_length=30,primary_key=True)
+    numberofwards = models.IntegerField()
+    numberofdistricts = models.IntegerField()
+
+    geom = ArrayField(ArrayField(ArrayField(ArrayField(models.DecimalField()))))
+
+    class Meta:
+        managed = False
+        db_table = f'"{settings.BASE_SCHEMA}"."province"'
+
+    objects = models.Manager()

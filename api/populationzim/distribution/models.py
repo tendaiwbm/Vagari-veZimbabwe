@@ -28,3 +28,17 @@ class Ward(models.Model):
         unique_together = [["ward_number","district_name"]]
 
     objects = models.Manager()
+
+
+class District(models.Model):
+    district_name = models.CharField(max_length=30,primary_key=True)
+    province_name = models.CharField(max_length=30)
+    numberofwards = models.IntegerField()
+
+    geom = ArrayField(ArrayField(ArrayField(ArrayField(models.DecimalField()))))
+
+    class Meta:
+        managed = False
+        db_table = f'"{settings.BASE_SCHEMA}"."district"'
+
+    objects = models.Manager()

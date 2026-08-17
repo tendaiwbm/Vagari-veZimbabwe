@@ -1,13 +1,26 @@
-from django.http import JsonResponse
+from json import dumps as json_dump
+from django.http import JsonResponse,HttpResponse
 from .validators import WardRequestValidator
+from .models import Ward
+from django.core import serializers
 
 
 def get_ward_population(request):
-    
+    """Handle requests for ward population data"""
+
     if request.method == "GET":
         ward_request = WardRequestValidator(request.GET)
         
         if ward_request.is_valid():
-            return JsonResponse({"key": "valid"})
+            params = ward_request.cleaned_data
+            population_field = "_".join([params["sex"],"population",str(params["year"])])            
+            data = Ward.objects.values(population_field,"geom")
 
-    return JsonResponse({"key": "invalid"})
+            response_dict = { "coordinates": [ward["geom"] if len(ward["geom"][0]) == 1 
+                                              else [[ward["geom"][0][0],[point for point in ward["geom"][0][1] if point != [0,0]]]]
+                                              for ward in data],
+                              "values": [ward[population_field] for ward in data] }
+
+            return JsonResponse(response_dict)
+
+    return JsonResponse({"message": "invalid request"})

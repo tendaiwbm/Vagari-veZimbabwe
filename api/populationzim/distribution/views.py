@@ -1,8 +1,8 @@
 from django.http import JsonResponse
 from django.db.models import Sum
 from pandas import DataFrame
-from .validators import WardRequestValidator,DistrictRequestValidator
-from .models import Ward,District
+from .validators import WardRequestValidator,DistrictRequestValidator,ProvinceRequestValidator
+from .models import Ward,District,Province
 
 
 def get_ward_population(request):
@@ -70,8 +70,29 @@ def get_province_population(request):
     """Handle requests for province population data"""
 
     if request.method == "GET":
+        province_request = ProvinceRequestValidator(request.GET)
+        
+        if province_request.is_valid():
+            params = province_request.cleaned_data
+            population_field = "_".join([params["sex"],"population",str(params["year"])])            
+            
+            wards = Ward.objects
+            provinces = Province.objects
+            if params["apply_filter"] and params["filter_province"]:
+                wards = wards.filter(province_name__in=params["filter_province"])
+                provinces = provinces.filter(province_name__in=params["filter_province"])
+            
+            wards = wards.values("province_name").annotate(province_population=Sum(population_field))
+            wards = DataFrame.from_records(wards)
+            provinces = DataFrame.from_records(provinces.values("province_name","geom"))
+            provinces = provinces.merge(wards,how="inner",on="province_name")
+           
+            response_dict = { "coordinates": [province if len(province[0]) == 1 
+                                              else [[province[0][0],[point for point in province[0][1] if point != [0,0]]]]
+                                              for province in provinces["geom"]],
+                              "values": provinces["province_population"].to_list(),
+                              "names": provinces["province_name"].to_list() }
 
-        return JsonResponse({"message": "valid"})
-
+            return JsonResponse(response_dict)
+        
     return JsonResponse({"message": "invalid request"})
-

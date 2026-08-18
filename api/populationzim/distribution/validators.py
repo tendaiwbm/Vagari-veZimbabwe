@@ -28,7 +28,7 @@ class BaseDistributionRequestValidator(forms.Form):
     grain = forms.CharField(max_length=8)
     sex = forms.CharField(max_length=6,validators=[validate_sex],empty_value="total")
     year = forms.IntegerField(validators=[validate_year])
-    apply_filter = forms.BooleanField(empty_value=False,required=False,validators=[validate_apply_filter])
+    apply_filter = forms.BooleanField(required=False,validators=[validate_apply_filter])
     filter_district = forms.CharField(required=False)
     filter_province = forms.CharField(required=False)
 
@@ -93,7 +93,7 @@ class DistrictRequestValidator(BaseDistributionRequestValidator):
         
         grain = self.cleaned_data.get("grain")
         
-        if grain not in ["ward","district"]:
+        if grain != "district":
             raise ValidationError(f"Granularity '{grain}' is not a valid value for district population distribution.")
 
         return grain

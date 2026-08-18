@@ -64,3 +64,14 @@ def get_district_population(request):
             return JsonResponse(response_dict)
 
     return JsonResponse({"message": "invalid request"})
+
+
+def get_province_population(request):
+    """Handle requests for province population data"""
+
+    if request.method == "GET":
+
+        return JsonResponse({"message": "valid"})
+
+    return JsonResponse({"message": "invalid request"})
+

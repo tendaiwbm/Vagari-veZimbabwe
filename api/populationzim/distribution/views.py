@@ -1,5 +1,4 @@
-from json import dumps as json_dump
-from django.http import JsonResponse,HttpResponse
+from django.http import JsonResponse
 from .validators import WardRequestValidator
 from .models import Ward
 from django.core import serializers
@@ -14,8 +13,16 @@ def get_ward_population(request):
         if ward_request.is_valid():
             params = ward_request.cleaned_data
             population_field = "_".join([params["sex"],"population",str(params["year"])])            
-            data = Ward.objects.values(population_field,"geom")
-
+            
+            data = Ward.objects
+            if params["apply_filter"]:
+                if params["filter_district"]:
+                    data = data.filter(district_name__in=params["filter_district"])
+                elif params["filter_province"]:
+                    data = data.filter(province_name__in=params["filter_province"])
+                 
+            data = data.values(population_field,"geom")
+            
             response_dict = { "coordinates": [ward["geom"] if len(ward["geom"][0]) == 1 
                                               else [[ward["geom"][0][0],[point for point in ward["geom"][0][1] if point != [0,0]]]]
                                               for ward in data],

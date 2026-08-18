@@ -11,9 +11,14 @@ def validate_year(year):
 def validate_sex(sex):
     """Validate that the given sex is male or female"""
     
-    if sex:
-        if sex not in ["male","female","total"]:
-            raise ValidationError(f"{sex} is not an accepted value.")
+    if sex not in ["male","female","total"]:
+        raise ValidationError(f"{sex} is not an accepted value.")
+
+def validate_apply_filter(value):
+    """Validate that the given sex is male or female"""
+    
+    if not isinstance(value,bool) or value not in [True,False]:
+        raise ValidationError(f"Value for apply_filter is not an accepted value.")
 
 
 class BaseDistributionRequestValidator(forms.Form):
@@ -23,6 +28,23 @@ class BaseDistributionRequestValidator(forms.Form):
     grain = forms.CharField(max_length=8)
     sex = forms.CharField(max_length=6,validators=[validate_sex])
     year = forms.IntegerField(validators=[validate_year])
+    apply_filter = forms.BooleanField(required=False,validators=[validate_apply_filter])
+    filter_district = forms.CharField(required=False)
+    filter_province = forms.CharField(required=False)
+
+    def clean(self):
+        
+        data = super().clean()
+        
+        if data["apply_filter"]:
+            if data["filter_district"]:
+               data["filter_district"] = data["filter_district"].split(",")
+            elif data["filter_province"]:
+                data["filter_province"] = data["filter_province"].split(",")
+            else:
+                raise ValidationError(f"Filter request for ward population distribution incomplete.")
+        
+        return data
 
 
 class WardRequestValidator(BaseDistributionRequestValidator):
@@ -51,3 +73,5 @@ class WardRequestValidator(BaseDistributionRequestValidator):
             grain = "ward"
 
         return grain
+
+

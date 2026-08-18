@@ -1,7 +1,6 @@
 from django.http import JsonResponse
 from .validators import WardRequestValidator
 from .models import Ward
-from django.core import serializers
 
 
 def get_ward_population(request):

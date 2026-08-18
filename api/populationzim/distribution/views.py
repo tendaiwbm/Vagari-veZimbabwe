@@ -1,5 +1,5 @@
 from django.http import JsonResponse
-from .validators import WardRequestValidator
+from .validators import WardRequestValidator,DistrictRequestValidator
 from .models import Ward
 
 
@@ -35,8 +35,15 @@ def get_district_population(request):
     """Handle requests for district population data"""
 
     if request.method == "GET":
+        district_request = DistrictRequestValidator(request.GET)
+        
+        if district_request.is_valid():
+            params = district_request.cleaned_data
+            population_field = "_".join([params["sex"],"population",str(params["year"])])            
+            
 
-        return JsonResponse({"message": "valid"})
+            
+            return JsonResponse({"message": "valid"})
 
     return JsonResponse({"message": "invalid request"})
 

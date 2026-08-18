@@ -26,9 +26,9 @@ class BaseDistributionRequestValidator(forms.Form):
     
     admin_level = forms.CharField(max_length=30)
     grain = forms.CharField(max_length=8)
-    sex = forms.CharField(max_length=6,validators=[validate_sex])
+    sex = forms.CharField(max_length=6,validators=[validate_sex],empty_value="total")
     year = forms.IntegerField(validators=[validate_year])
-    apply_filter = forms.BooleanField(required=False,validators=[validate_apply_filter])
+    apply_filter = forms.BooleanField(empty_value=False,required=False,validators=[validate_apply_filter])
     filter_district = forms.CharField(required=False)
     filter_province = forms.CharField(required=False)
 
@@ -74,4 +74,27 @@ class WardRequestValidator(BaseDistributionRequestValidator):
 
         return grain
 
+
+class DistrictRequestValidator(BaseDistributionRequestValidator):
+    """Validate the query string provided in requests for district data"""
+
+    def clean_admin_level(self):
+        """Validate that the admin_level provided corresponds to the accepted 
+           geographic boundary aggregation level for district population distribution"""
+         
+        admin_level = self.cleaned_data["admin_level"]
+        if admin_level != "district":
+            raise ValidationError(f"'{admin_level}' is not a valid admin_level for district population distribution.")
+
+        return admin_level
+    
+    def clean_grain(self):
+        """Validate the granularity provided against accepted values."""
+        
+        grain = self.cleaned_data.get("grain")
+        
+        if grain not in ["ward","district"]:
+            raise ValidationError(f"Granularity '{grain}' is not a valid value for district population distribution.")
+
+        return grain
 

@@ -30,3 +30,13 @@ def get_ward_population(request):
             return JsonResponse(response_dict)
 
     return JsonResponse({"message": "invalid request"})
+
+def get_district_population(request):
+    """Handle requests for district population data"""
+
+    if request.method == "GET":
+
+        return JsonResponse({"message": "valid"})
+
+    return JsonResponse({"message": "invalid request"})
+

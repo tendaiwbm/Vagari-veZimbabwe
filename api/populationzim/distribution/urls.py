@@ -1,0 +1,5 @@
+from django.urls import path
+from distribution import views
+
+
+urlpatterns = [path('ward/', views.get_ward_population)]

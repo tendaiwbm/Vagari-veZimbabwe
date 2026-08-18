@@ -1,0 +1,77 @@
+from django import forms
+from django.core.exceptions import ValidationError
+
+
+def validate_year(year):
+    """Validate that the year provided corresponds to a census year"""
+    
+    if year not in [2012,2022]:
+        raise ValidationError(f"{year} is not an accepted value.")
+
+def validate_sex(sex):
+    """Validate that the given sex is male or female"""
+    
+    if sex not in ["male","female","total"]:
+        raise ValidationError(f"{sex} is not an accepted value.")
+
+def validate_apply_filter(value):
+    """Validate that the given sex is male or female"""
+    
+    if not isinstance(value,bool) or value not in [True,False]:
+        raise ValidationError(f"Value for apply_filter is not an accepted value.")
+
+
+class BaseDistributionRequestValidator(forms.Form):
+    """Base class for validation of query strings provided in requests for population distribution data"""
+    
+    admin_level = forms.CharField(max_length=30)
+    grain = forms.CharField(max_length=8)
+    sex = forms.CharField(max_length=6,validators=[validate_sex])
+    year = forms.IntegerField(validators=[validate_year])
+    apply_filter = forms.BooleanField(required=False,validators=[validate_apply_filter])
+    filter_district = forms.CharField(required=False)
+    filter_province = forms.CharField(required=False)
+
+    def clean(self):
+        
+        data = super().clean()
+        
+        if data["apply_filter"]:
+            if data["filter_district"]:
+               data["filter_district"] = data["filter_district"].split(",")
+            elif data["filter_province"]:
+                data["filter_province"] = data["filter_province"].split(",")
+            else:
+                raise ValidationError(f"Filter request for ward population distribution incomplete.")
+        
+        return data
+
+
+class WardRequestValidator(BaseDistributionRequestValidator):
+    """Validate the query string provided in requests for ward data"""
+
+    def clean_admin_level(self):
+        """Validate that the admin_level provided corresponds to the accepted 
+           geographic boundary aggregation level for ward population distribution"""
+         
+        admin_level = self.cleaned_data["admin_level"]
+        if admin_level != "ward":
+            raise ValidationError(f"{admin_level} is not a valid admin_level for ward population distribution.")
+
+        return admin_level
+    
+    def clean_grain(self):
+        """Custom clean logic to 
+           1. check whether admin_level and granularity are in sync.
+           2. coerce the granularity."""
+        
+        grain = self.cleaned_data.get("grain")
+        
+        if grain != "ward":
+            # log that grain was not as expected, 
+            # and that grain will be coerced to expected value
+            grain = "ward"
+
+        return grain
+
+

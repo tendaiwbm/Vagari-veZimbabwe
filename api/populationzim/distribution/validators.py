@@ -98,3 +98,26 @@ class DistrictRequestValidator(BaseDistributionRequestValidator):
 
         return grain
 
+
+class ProvinceRequestValidator(BaseDistributionRequestValidator):
+    """Validate the query string provided in requests for provincial data"""
+
+    def clean_admin_level(self):
+        """Validate that the admin_level provided corresponds to the accepted 
+           geographic boundary aggregation level for province population distribution"""
+         
+        admin_level = self.cleaned_data["admin_level"]
+        if admin_level != "province":
+            raise ValidationError(f"'{admin_level}' is not a valid admin_level for province population distribution.")
+
+        return admin_level
+    
+    def clean_grain(self):
+        """Validate the granularity provided against accepted values."""
+        
+        grain = self.cleaned_data.get("grain")
+        
+        if grain != "province":
+            raise ValidationError(f"Granularity '{grain}' is not a valid value for province population distribution.")
+
+        return grain

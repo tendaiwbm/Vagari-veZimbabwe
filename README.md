@@ -14,3 +14,9 @@ Population data.
 	<li>Testing performance improvements that can come from streaming polygon data.</li>
 	<li>Adding more data to support non-spatial visualisations.</li>
 </ol>
+
+<h2>Future</h2>
+<ul>
+	<li>Migrating to TypeScript.</li>
+	<li>Replacing Leaflet with MapLibre or ArcGIS API for JavaScript.</li>
+</ul>

@@ -1,3 +1,6 @@
+import { URLBuilder } from "./url.js"
+
+
 var BASE = "http://population.zim:8081/";
 var API_GEO_STUB = "api/geo";
 
@@ -13,7 +16,7 @@ function munyayi(mahobho,responseHandler) {
 }
 
 // penengura mhinduro, gadzirisa map
-function mhinduro(event,mutumwa) {
+export function mhinduro(event,mutumwa) {
 	console.log(event);
 	const map = document.getElementById("map");
 	CategoryState["filterActive"] = false;
@@ -24,7 +27,10 @@ function mhinduro(event,mutumwa) {
 
 
 // tumira, penengura mhinduro, gadzirisa map
-function diridza(params) {
+export function diridza(params) {
+	var builder = new URLBuilder(params);
+	return;
+
 	var mahobho = `${BASE}${API_GEO_STUB}?category=${CategoryState["categorySelected"].toLowerCase()}&admin=${params["admin-level"]}&grain=${params["granularity"]}&year=${params["year"]}&sex=${params["sex"]}`;
 	if (params["admin-names"].length > 0) { 
 		var nkazana = "&admin-names=";

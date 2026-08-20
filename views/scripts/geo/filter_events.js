@@ -1,4 +1,6 @@
-// filter state
+import { mhinduro,diridza } from "./diridza.js"
+
+
 var FilterState = {
 				   "admin-level": "",
 				   "granularity": "",
@@ -128,22 +130,22 @@ function updateGrainState(event) {
 }
 
 // Admin Level 
-admin = document.getElementById("admin-level");
+var admin = document.getElementById("admin-level");
 admin.addEventListener("change",updateAdminLevelState);
 
 // Spatial Granularity
-grain = document.getElementById("grain");
+var grain = document.getElementById("grain");
 grain.addEventListener("change", updateGrainState);
 
 // Year 
-t = document.getElementById("year");
+var t = document.getElementById("year");
 t.addEventListener("change", updateFilterState);
 
 // Sex
-sex = document.getElementById("sex");
+var sex = document.getElementById("sex");
 sex.addEventListener("change", updateFilterState); 
 
 
 // apply filters
-dispatcher = document.getElementById("show-label");
+var dispatcher = document.getElementById("show-label");
 dispatcher.addEventListener("click", tumira);

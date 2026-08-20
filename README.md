@@ -2,7 +2,7 @@
 Population data.
 
 <h2>Current Status</h2>
-<img src="docs/readme/current_status.png"/>
+<img src="assets/current_status.png"/>
 
 <h3>Ongoing Work</h3>
 <ol>

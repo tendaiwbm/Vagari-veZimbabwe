@@ -1,4 +1,5 @@
-var BASE = "http://population.zim:8081/";
+import { URLBuilder } from "./url.js"
+
 var API_GEO_STUB = "api/geo";
 
 function munyayi(mahobho,responseHandler) {
@@ -13,7 +14,7 @@ function munyayi(mahobho,responseHandler) {
 }
 
 // penengura mhinduro, gadzirisa map
-function mhinduro(event,mutumwa) {
+export function mhinduro(event,mutumwa) {
 	console.log(event);
 	const map = document.getElementById("map");
 	CategoryState["filterActive"] = false;
@@ -24,20 +25,27 @@ function mhinduro(event,mutumwa) {
 
 
 // tumira, penengura mhinduro, gadzirisa map
-function diridza(params) {
-	var mahobho = `${BASE}${API_GEO_STUB}?category=${CategoryState["categorySelected"].toLowerCase()}&admin=${params["admin-level"]}&grain=${params["granularity"]}&year=${params["year"]}&sex=${params["sex"]}`;
-	if (params["admin-names"].length > 0) { 
-		var nkazana = "&admin-names=";
-		for (i=0;i<params["admin-names"].length;i++) {
-			nkazana += `${params["admin-names"][i]}`;
-			if ((i + 1) < params["admin-names"].length) {
-				nkazana += ";";
-			}
+export function diridza(params) {
+	var builder = new URLBuilder().
+					  updateCategory(CategoryState["categorySelected"].toLowerCase()).
+					  updateAdminLevel(params["admin-level"]).
+					  updateGranularity(params["granularity"]).
+					  updateSex(params["sex"]).
+					  updateYear(params["year"]);
+
+	if (params["admin-names"]) {
+		if (params["admin-level"] === "district") {
+			builder.updateFilterDistrict(params["admin-names"]);
 		}
-		mahobho += nkazana;
+		else if (params["admin-level"] === "province") {
+			builder.updateFilterProvince(params["admin-names"]);
+		}
 	}
-	console.log(mahobho);
-	munyayi(mahobho,params["zvadzoka"]);
+	
+	let url = builder.build()
+
+	munyayi(url,params["zvadzoka"]);
+
 	return;
 }
 
@@ -46,4 +54,3 @@ function zvakavanda(level,responseHandler) {
 	console.log("Meta URL  >>  " + mahobho);
 	munyayi(mahobho,responseHandler);
 }
-

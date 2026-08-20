@@ -14,6 +14,11 @@ export class URLBuilder {
  		this.filterProvince = null;
  	}
 
+ 	updateCategory(category) {
+ 		this.category = category;
+ 		return this;
+ 	}
+
  	updateAdminLevel(adminLevel) {
  		this.adminLevel = adminLevel;
  		return this;
@@ -47,10 +52,6 @@ export class URLBuilder {
  	build() {
 
 		// check required keys first
-		if (!(this.category)) {
-			throw new Error("Required parameter 'category' missing.");
-		};
-
 		if (!(this.adminLevel)) {
 			throw new Error("Required parameter 'admin-level' missing.");
 		};
@@ -67,6 +68,18 @@ export class URLBuilder {
 			throw new Error("Required parameter 'year' missing.");
 		}
 
- 		return;
+		let baseUrl = `${window.location.origin}/api/distribution/${this.adminLevel}`;
+		let queryString = `admin_level=${this.adminLevel}&grain=${this.grain}&sex=${this.sex}&year=${this.year}`;
+
+		if (this.filterDistrct) {
+			queryString = `${queryString}&filter_district=${this.filterDistrict}`;
+		}
+		else if (this.filterProvince) {
+			queryString = `${queryString}&filter_province=${this.filterProvince}`;
+		}
+
+ 		let url = `${baseUrl}?${queryString}`;
+
+ 		return url;
  	}
  }

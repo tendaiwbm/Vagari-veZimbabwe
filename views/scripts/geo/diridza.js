@@ -28,9 +28,8 @@ export function mhinduro(event,mutumwa) {
 
 // tumira, penengura mhinduro, gadzirisa map
 export function diridza(params) {
-	var builder = new URLBuilder(params);
+	var builder = new URLBuilder().build();
 	return;
-
 	var mahobho = `${BASE}${API_GEO_STUB}?category=${CategoryState["categorySelected"].toLowerCase()}&admin=${params["admin-level"]}&grain=${params["granularity"]}&year=${params["year"]}&sex=${params["sex"]}`;
 	if (params["admin-names"].length > 0) { 
 		var nkazana = "&admin-names=";

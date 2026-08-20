@@ -4,7 +4,7 @@ Population data.
 <h2>Current Status</h2>
 <img src="assets/current_status.png"/>
 
-<h3>Ongoing Work</h3>
+<h2>Ongoing Work</h2>
 <ol>
 	<li>Restructuring the front-end (views) directory.</li>
 	<li>Introducing Bulma for styling.</li>

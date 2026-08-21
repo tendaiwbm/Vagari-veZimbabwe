@@ -1,7 +1,7 @@
 from django.http import JsonResponse
 from django.db.models import Sum
 from pandas import DataFrame
-from .validators import WardRequestValidator,DistrictRequestValidator,ProvinceRequestValidator
+from .validators import WardRequestValidator,DistrictRequestValidator,ProvinceRequestValidator,AdminNamesRequestValidator
 from .models import Ward,District,Province
 
 
@@ -102,8 +102,12 @@ def get_admin_names(request):
     """Provide a list of all district/province names"""
 
     if request.method == "GET":
+        names_request = AdminNamesRequestValidator(request.GET)
 
-        return { "message": "valid" }
+        if names_request.is_valid():
+            return JsonResponse({ "message": "valid" })
+        else:
+            print(names_request.errors)
     
-    return { "message": "invalid" }
+    return JsonResponse({ "message": "invalid" })
     

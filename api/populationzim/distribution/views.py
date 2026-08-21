@@ -105,9 +105,17 @@ def get_admin_names(request):
         names_request = AdminNamesRequestValidator(request.GET)
 
         if names_request.is_valid():
-            return JsonResponse({ "message": "valid" })
-        else:
-            print(names_request.errors)
-    
+            params = names_request.cleaned_data
+            names_column = "_".join([params["admin_level"],"name"])
+
+            if params["admin_level"] == "district":
+                admin_names_model = District
+            elif params["admin_level"] == "province":
+                admin_names_model = Province
+
+            names = admin_names_model.objects.values(names_column)
+
+            return JsonResponse({ "names": [name[key] for name in names for key in name] })
+
     return JsonResponse({ "message": "invalid" })
     

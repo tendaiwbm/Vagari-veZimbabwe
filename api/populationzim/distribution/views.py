@@ -96,3 +96,14 @@ def get_province_population(request):
             return JsonResponse(response_dict)
         
     return JsonResponse({"message": "invalid request"})
+
+
+def get_admin_names(request):
+    """Provide a list of all district/province names"""
+
+    if request.method == "GET":
+
+        return { "message": "valid" }
+    
+    return { "message": "invalid" }
+    

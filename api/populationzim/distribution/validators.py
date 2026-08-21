@@ -20,6 +20,12 @@ def validate_apply_filter(value):
     if not isinstance(value,bool) or value not in [True,False]:
         raise ValidationError(f"Value for apply_filter is not an accepted value.")
 
+def validate_admin_names_level(admin_level):
+    """Validate that admin level can be used to retrieve unique list of names"""
+
+    if admin_level not in ["province","district"]:
+        raise ValidationError(f"'{admin_level}' is not an accepted value for retrieving admin names.")
+
 
 class BaseDistributionRequestValidator(forms.Form):
     """Base class for validation of query strings provided in requests for population distribution data"""
@@ -121,3 +127,9 @@ class ProvinceRequestValidator(BaseDistributionRequestValidator):
             raise ValidationError(f"Granularity '{grain}' is not a valid value for province population distribution.")
 
         return grain
+
+
+class AdminNamesRequestValidator(forms.Form):
+    """Validate the query string provided in requests for provincial data"""
+
+    admin_level = forms.CharField(validators=[validate_admin_names_level])

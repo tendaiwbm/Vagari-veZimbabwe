@@ -1,7 +1,7 @@
 from django.http import JsonResponse
 from django.db.models import Sum
 from pandas import DataFrame
-from .validators import WardRequestValidator,DistrictRequestValidator,ProvinceRequestValidator
+from .validators import WardRequestValidator,DistrictRequestValidator,ProvinceRequestValidator,AdminNamesRequestValidator
 from .models import Ward,District,Province
 
 
@@ -96,3 +96,26 @@ def get_province_population(request):
             return JsonResponse(response_dict)
         
     return JsonResponse({"message": "invalid request"})
+
+
+def get_admin_names(request):
+    """Provide a list of all district/province names"""
+
+    if request.method == "GET":
+        names_request = AdminNamesRequestValidator(request.GET)
+
+        if names_request.is_valid():
+            params = names_request.cleaned_data
+            names_column = "_".join([params["admin_level"],"name"])
+
+            if params["admin_level"] == "district":
+                admin_names_model = District
+            elif params["admin_level"] == "province":
+                admin_names_model = Province
+
+            names = admin_names_model.objects.values(names_column)
+
+            return JsonResponse({ "names": [name[key] for name in names for key in name] })
+
+    return JsonResponse({ "message": "invalid" })
+    

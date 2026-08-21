@@ -43,14 +43,14 @@ export function diridza(params) {
 	}
 	
 	let url = builder.build()
+	console.log(url);
 
 	munyayi(url,params["zvadzoka"]);
 
 	return;
 }
 
-function zvakavanda(level,responseHandler) {
-	var mahobho = `${BASE}${API_GEO_STUB}/zvakavanda?admin=${level}`;
-	console.log("Meta URL  >>  " + mahobho);
+export function zvakavanda(level,responseHandler) {
+	var mahobho = `${window.location.origin}/api/${CategoryState["categorySelected"].toLowerCase()}/names?admin_level=${level}`;
 	munyayi(mahobho,responseHandler);
 }

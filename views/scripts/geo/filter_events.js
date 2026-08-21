@@ -1,4 +1,4 @@
-import { mhinduro,diridza } from "./diridza.js"
+import { mhinduro,diridza,zvakavanda } from "./diridza.js"
 
 
 var FilterState = {
@@ -60,7 +60,7 @@ function adminNamesResponseHandler(event,response) {
  						<div id="admin-names" style="visibility: hidden">
 					   `;
 
-	for (i=0;i<names[key].length;i++) {
+	for (let i=0;i<names[key].length;i++) {
 		namesElement += `<div><input type="checkbox" class="admin-options" name="${names[key][i]}"/><label for="${names[key][i].toLowerCase()}" style="padding-left: 5px">${names[key][i]}</label></div>`;
 	}
 
@@ -69,7 +69,7 @@ function adminNamesResponseHandler(event,response) {
 	document.getElementById("admin-names-label").innerText = key[0].toUpperCase() + key.slice(1);
 	document.getElementById("admin-names-dropdown").addEventListener("click",adminNamesDropdown);
 	var adminOptions = document.getElementsByClassName("admin-options");
-	for (i=0;i<names[key].length;i++) { adminOptions[i].addEventListener("click",updateAdminOptionState); }
+	for (let i=0;i<names[key].length;i++) { adminOptions[i].addEventListener("click",updateAdminOptionState); }
 }
 
 function updateAdminOptionState(event) {

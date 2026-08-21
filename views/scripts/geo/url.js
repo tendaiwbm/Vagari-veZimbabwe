@@ -40,12 +40,12 @@ export class URLBuilder {
  	}
 
  	updateFilterDistrict(districts) {
- 		this.filterDistricts = districts.join(",");
+ 		this.filterDistrict = districts.join(",");
  		return this;
  	}
 
  	updateFilterProvince(provinces) {
- 		this.filterProvinces = provinces.join(",");
+ 		this.filterProvince = provinces.join(",");
  		return this;
  	}
 
@@ -71,11 +71,11 @@ export class URLBuilder {
 		let baseUrl = `${window.location.origin}/api/distribution/${this.adminLevel}`;
 		let queryString = `admin_level=${this.adminLevel}&grain=${this.grain}&sex=${this.sex}&year=${this.year}`;
 
-		if (this.filterDistrct) {
-			queryString = `${queryString}&filter_district=${this.filterDistrict}`;
+		if (this.filterDistrict) {
+			queryString = `${queryString}&filter_district=${this.filterDistrict}&apply_filter=true`;
 		}
 		else if (this.filterProvince) {
-			queryString = `${queryString}&filter_province=${this.filterProvince}`;
+			queryString = `${queryString}&filter_province=${this.filterProvince}&apply_filter=true`;
 		}
 
  		let url = `${baseUrl}?${queryString}`;

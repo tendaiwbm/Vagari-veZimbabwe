@@ -1,6 +1,5 @@
 import { URLBuilder } from "./url.js"
 
-var API_GEO_STUB = "api/geo";
 
 function munyayi(mahobho,responseHandler) {
 	var mutumwa = new XMLHttpRequest();
@@ -29,7 +28,6 @@ export function diridza(params) {
 	var builder = new URLBuilder().
 					  updateCategory(CategoryState["categorySelected"].toLowerCase()).
 					  updateAdminLevel(params["admin-level"]).
-					  updateGranularity(params["granularity"]).
 					  updateSex(params["sex"]).
 					  updateYear(params["year"]);
 

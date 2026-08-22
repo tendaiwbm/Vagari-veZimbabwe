@@ -7,7 +7,6 @@ export class URLBuilder {
  		// URL query string params
  		this.category = null;
  		this.adminLevel = null;
- 		this.grain = null;
  		this.sex = null;
  		this.year = null;
  		this.filterDistrict = null;
@@ -21,11 +20,6 @@ export class URLBuilder {
 
  	updateAdminLevel(adminLevel) {
  		this.adminLevel = adminLevel;
- 		return this;
- 	}
-
- 	updateGranularity(grain) {
- 		this.grain = grain;
  		return this;
  	}
 
@@ -55,10 +49,6 @@ export class URLBuilder {
 		if (!(this.adminLevel)) {
 			throw new Error("Required parameter 'admin-level' missing.");
 		};
-			
-		if (!(this.grain)) {
-			throw new Error("Required parameter 'granularity' missing.");
-		}
 
 		if (!(this.sex)) {
 			throw new Error("Required parameter 'sex' missing.");
@@ -69,7 +59,7 @@ export class URLBuilder {
 		}
 
 		let baseUrl = `${window.location.origin}/api/distribution/${this.adminLevel}`;
-		let queryString = `admin_level=${this.adminLevel}&grain=${this.grain}&sex=${this.sex}&year=${this.year}`;
+		let queryString = `admin_level=${this.adminLevel}&sex=${this.sex}&year=${this.year}`;
 
 		if (this.filterDistrict) {
 			queryString = `${queryString}&filter_district=${this.filterDistrict}&apply_filter=true`;

@@ -31,7 +31,6 @@ class BaseDistributionRequestValidator(forms.Form):
     """Base class for validation of query strings provided in requests for population distribution data"""
     
     admin_level = forms.CharField(max_length=30)
-    grain = forms.CharField(max_length=8)
     sex = forms.CharField(max_length=6,validators=[validate_sex],empty_value="total")
     year = forms.IntegerField(validators=[validate_year])
     apply_filter = forms.BooleanField(required=False,validators=[validate_apply_filter])
@@ -66,20 +65,6 @@ class WardRequestValidator(BaseDistributionRequestValidator):
 
         return admin_level
     
-    def clean_grain(self):
-        """Custom clean logic to 
-           1. check whether admin_level and granularity are in sync.
-           2. coerce the granularity."""
-        
-        grain = self.cleaned_data.get("grain")
-        
-        if grain != "ward":
-            # log that grain was not as expected, 
-            # and that grain will be coerced to expected value
-            grain = "ward"
-
-        return grain
-
 
 class DistrictRequestValidator(BaseDistributionRequestValidator):
     """Validate the query string provided in requests for district data"""
@@ -94,16 +79,6 @@ class DistrictRequestValidator(BaseDistributionRequestValidator):
 
         return admin_level
     
-    def clean_grain(self):
-        """Validate the granularity provided against accepted values."""
-        
-        grain = self.cleaned_data.get("grain")
-        
-        if grain != "district":
-            raise ValidationError(f"Granularity '{grain}' is not a valid value for district population distribution.")
-
-        return grain
-
 
 class ProvinceRequestValidator(BaseDistributionRequestValidator):
     """Validate the query string provided in requests for provincial data"""
@@ -118,16 +93,6 @@ class ProvinceRequestValidator(BaseDistributionRequestValidator):
 
         return admin_level
     
-    def clean_grain(self):
-        """Validate the granularity provided against accepted values."""
-        
-        grain = self.cleaned_data.get("grain")
-        
-        if grain != "province":
-            raise ValidationError(f"Granularity '{grain}' is not a valid value for province population distribution.")
-
-        return grain
-
 
 class AdminNamesRequestValidator(forms.Form):
     """Validate the query string provided in requests for provincial data"""

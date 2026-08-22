@@ -1,3 +1,4 @@
+from math import log10
 from django.http import JsonResponse
 from django.db.models import Sum
 from pandas import DataFrame
@@ -13,7 +14,7 @@ def get_ward_population(request):
         
         if ward_request.is_valid():
             params = ward_request.cleaned_data
-            population_field = "_".join([params["sex"],"population",str(params["year"])])            
+            population_field = "_".join([params["sex"],"population","density",str(params["year"])])            
             
             data = Ward.objects
             if params["apply_filter"]:
@@ -27,7 +28,10 @@ def get_ward_population(request):
             response_dict = { "coordinates": [ward["geom"] if len(ward["geom"][0]) == 1 
                                               else [[ward["geom"][0][0],[point for point in ward["geom"][0][1] if point != [0,0]]]]
                                               for ward in data],
-                              "values": [ward[population_field] for ward in data] }
+                              "values": [log10(ward[population_field]) 
+                                         if ward[population_field] > 0
+                                         else 0
+                                         for ward in data] }
 
             return JsonResponse(response_dict)
 
@@ -42,7 +46,7 @@ def get_district_population(request):
         
         if district_request.is_valid():
             params = district_request.cleaned_data
-            population_field = "_".join([params["sex"],"population",str(params["year"])])            
+            population_field = "_".join([params["sex"],"population","density",str(params["year"])])            
             
             wards = Ward.objects
             districts = District.objects
@@ -58,7 +62,7 @@ def get_district_population(request):
             response_dict = { "coordinates": [district if len(district[0]) == 1 
                                               else [[district[0][0],[point for point in district[0][1] if point != [0,0]]]]
                                               for district in districts["geom"]],
-                              "values": districts["district_population"].to_list(),
+                              "values": list(map(log10,districts["district_population"].to_list())),
                               "names": districts["district_name"].to_list() }
             
             return JsonResponse(response_dict)
@@ -74,7 +78,7 @@ def get_province_population(request):
         
         if province_request.is_valid():
             params = province_request.cleaned_data
-            population_field = "_".join([params["sex"],"population",str(params["year"])])            
+            population_field = "_".join([params["sex"],"population","density",str(params["year"])])            
             
             wards = Ward.objects
             provinces = Province.objects
@@ -90,7 +94,7 @@ def get_province_population(request):
             response_dict = { "coordinates": [province if len(province[0]) == 1 
                                               else [[province[0][0],[point for point in province[0][1] if point != [0,0]]]]
                                               for province in provinces["geom"]],
-                              "values": provinces["province_population"].to_list(),
+                              "values": list(map(log10,provinces["province_population"].to_list())),
                               "names": provinces["province_name"].to_list() }
 
             return JsonResponse(response_dict)

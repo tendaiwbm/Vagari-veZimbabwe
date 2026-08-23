@@ -4,7 +4,7 @@ from django.core.exceptions import ValidationError
 import distribution.validators as v
 
 
-class FormValidationTests(TestCase):
+class BaseValidatorTests(TestCase):
     """Tests for validation forms"""
     
     def setUp(self):
@@ -77,4 +77,26 @@ class FormValidationTests(TestCase):
 
         with self.assertRaises(KeyError):
             validator.clean()
+
+
+class AdminValidatorTests(TestCase):
+    """Tests for Ward, District & Province request validators"""
+
+    def setUp(self):
+        self.query_string_parameters = { "admin_level": "ward",
+                                         "sex": "total",
+                                         "year": 2022,
+                                         "apply_filter": "true",
+                                         "filter_district": "Mazowe,Mvurwi",
+                                         "filter_province": "Matebeleland North,Matebeleland South" }
+
+    def test_ward_admin_level(self):
+        """Test other admin_level value triggers validation failure for WardRequestValidator"""
+
+        params = deepcopy(self.query_string_parameters)
+        params["admin_level"] = "unknown"
+
+        validator = v.WardRequestValidator(params)
+        with self.assertRaises(AssertionError):
+            self.assertTrue(validator.is_valid())
 

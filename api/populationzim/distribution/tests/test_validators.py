@@ -37,6 +37,18 @@ class BaseValidatorTests(TestCase):
         
         validator = v.BaseDistributionRequestValidator(params)
         self.assertTrue(validator.is_valid())
+   
+    def test_sex_unexpected_value(self):
+        """Test validation raises error when sex has an unexpected value"""
+
+        params = deepcopy(self.query_string_parameters)
+        params_to_update = ("sex",)
+        for param in params_to_update:
+            params[param] = "combined"
+        
+        validator = v.BaseDistributionRequestValidator(params)
+        with self.assertRaises(AssertionError):
+            self.assertTrue(validator.is_valid())
     
     def test_year_missing(self):
         """Test validation raises error when year not in query string"""

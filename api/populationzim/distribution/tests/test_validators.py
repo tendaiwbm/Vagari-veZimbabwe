@@ -78,6 +78,21 @@ class BaseValidatorTests(TestCase):
         with self.assertRaises(KeyError):
             validator.clean()
 
+    def test_filterdistrict_aslist(self):
+        """Test districts parsed from query string returned as list of length >= 1"""
+
+        params = deepcopy(self.query_string_parameters)
+        params_to_drop = ("filter_province",)
+        for param in params_to_drop:
+            params.pop(param)
+        
+        validator = v.BaseDistributionRequestValidator(params)
+        self.assertTrue(validator.is_valid())
+
+        filter_by_districts = validator.cleaned_data["filter_district"]
+        self.assertTrue(isinstance(filter_by_districts,list))
+        self.assertTrue(len(filter_by_districts) >= 1)
+
 
 class AdminValidatorTests(TestCase):
     """Tests for Ward, District & Province request validators"""

@@ -99,4 +99,23 @@ class AdminValidatorTests(TestCase):
         validator = v.WardRequestValidator(params)
         with self.assertRaises(AssertionError):
             self.assertTrue(validator.is_valid())
+    
+    def test_district_admin_level(self):
+        """Test other admin_level value triggers validation failure for DistrictRequestValidator"""
 
+        params = deepcopy(self.query_string_parameters)
+        params["admin_level"] = "unknown"
+
+        validator = v.DistrictRequestValidator(params)
+        with self.assertRaises(AssertionError):
+            self.assertTrue(validator.is_valid())
+
+    def test_province_admin_level(self):
+        """Test other admin_level value triggers validation failure for ProvinceRequestValidator"""
+
+        params = deepcopy(self.query_string_parameters)
+        params["admin_level"] = "unknown"
+
+        validator = v.ProvinceRequestValidator(params)
+        with self.assertRaises(AssertionError):
+            self.assertTrue(validator.is_valid())

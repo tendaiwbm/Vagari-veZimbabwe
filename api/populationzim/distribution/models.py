@@ -20,7 +20,7 @@ class Ward(models.Model):
     avg_householdsize_2022 = models.IntegerField()
     avg_householdsize_2012 = models.IntegerField()
 
-    geom = ArrayField(ArrayField(ArrayField(ArrayField(models.DecimalField()))))
+    geom = ArrayField(ArrayField(ArrayField(ArrayField(models.DecimalField(max_digits=17,decimal_places=15)))))
 
     class Meta:
         managed = False
@@ -35,7 +35,7 @@ class District(models.Model):
     province_name = models.CharField(max_length=30)
     numberofwards = models.IntegerField()
 
-    geom = ArrayField(ArrayField(ArrayField(ArrayField(models.DecimalField()))))
+    geom = ArrayField(ArrayField(ArrayField(ArrayField(models.DecimalField(max_digits=17,decimal_places=15)))))
 
     class Meta:
         managed = False
@@ -49,7 +49,7 @@ class Province(models.Model):
     numberofwards = models.IntegerField()
     numberofdistricts = models.IntegerField()
 
-    geom = ArrayField(ArrayField(ArrayField(ArrayField(models.DecimalField()))))
+    geom = ArrayField(ArrayField(ArrayField(ArrayField(models.DecimalField(max_digits=17,decimal_places=15)))))
 
     class Meta:
         managed = False

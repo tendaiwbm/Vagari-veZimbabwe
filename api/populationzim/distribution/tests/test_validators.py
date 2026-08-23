@@ -63,3 +63,18 @@ class FormValidationTests(TestCase):
 
         with self.assertRaises(ValidationError):
             validator.clean()
+
+    def test_applyfilter_unaccompanied(self):
+        """Test validation behaviour when apply_filter not paired with filter_district or filter_province"""
+
+        params = deepcopy(self.query_string_parameters)
+        params_to_drop = ("filter_district","filter_province")
+        for param in params_to_drop:
+            params.pop(param)
+        
+        validator = v.BaseDistributionRequestValidator(params)
+        validator.cleaned_data = params
+
+        with self.assertRaises(KeyError):
+            validator.clean()
+

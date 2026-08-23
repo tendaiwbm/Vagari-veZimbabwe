@@ -49,4 +49,17 @@ class FormValidationTests(TestCase):
         validator = v.BaseDistributionRequestValidator(params)
         with self.assertRaises(AssertionError):
             self.assertTrue(validator.is_valid())
- 
+
+    def test_applyfilter_no_values(self):
+        """Test validation raises error when no values for filter_district or filter_province provided"""
+
+        params = deepcopy(self.query_string_parameters)
+        params_to_update = ("filter_district","filter_province")
+        for param in params_to_update:
+            params[param] = ""
+        
+        validator = v.BaseDistributionRequestValidator(params)
+        validator.cleaned_data = params
+
+        with self.assertRaises(ValidationError):
+            validator.clean()

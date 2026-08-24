@@ -17,6 +17,7 @@ Visualising population data at different units of aggregation.
 
 <h2>Future</h2>
 <ul>
+	<li>Deployment.</li>
 	<li>Migrating to TypeScript.</li>
 	<li>Replacing Leaflet with MapLibre or ArcGIS API for JavaScript.</li>
 	<li>Adding more data to support non-spatial visualisations.</li>

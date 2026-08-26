@@ -1,11 +1,15 @@
 from math import log10
 from django.http import JsonResponse
 from django.db.models import Sum
+from rest_framework.decorators import api_view,permission_classes
+from rest_framework.permissions import IsAuthenticated
 from pandas import DataFrame
 from .validators import WardRequestValidator,DistrictRequestValidator,ProvinceRequestValidator,AdminNamesRequestValidator
 from .models import Ward,District,Province
 
 
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
 def get_ward_population(request):
     """Handle requests for ward population data"""
 
@@ -38,6 +42,8 @@ def get_ward_population(request):
     return JsonResponse({"message": "invalid request"})
 
 
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
 def get_district_population(request):
     """Handle requests for district population data"""
 
@@ -70,6 +76,8 @@ def get_district_population(request):
     return JsonResponse({"message": "invalid request"})
 
 
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
 def get_province_population(request):
     """Handle requests for province population data"""
 
@@ -102,6 +110,8 @@ def get_province_population(request):
     return JsonResponse({"message": "invalid request"})
 
 
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
 def get_admin_names(request):
     """Provide a list of all district/province names"""
 

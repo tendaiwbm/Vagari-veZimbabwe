@@ -8,12 +8,12 @@ class Ward(models.Model):
     district_name = models.CharField(max_length=30)
     province_name = models.CharField(max_length=30)
 
-    male_population_density_2022 = models.IntegerField()
-    female_population_density_2022 = models.IntegerField()
-    total_population_density_2022 = models.IntegerField()
-    male_population_density_2012 = models.IntegerField()
-    female_population_density_2012 = models.IntegerField()
-    total_population_density_2012 = models.IntegerField()
+    male_population_2022 = models.IntegerField()
+    female_population_2022 = models.IntegerField()
+    total_population_2022 = models.IntegerField()
+    male_population_2012 = models.IntegerField()
+    female_population_2012 = models.IntegerField()
+    total_population_2012 = models.IntegerField()
 
     total_households_2022 = models.IntegerField()
     total_households_2012 = models.IntegerField()
